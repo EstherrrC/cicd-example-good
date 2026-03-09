@@ -1,21 +1,27 @@
 pipeline:
   name: default
-  description: Standard build and test pipeline for the calculator project
+  description: Standard build and test pipeline
 
 stages:
-  - lint
+  - build
   - test
 
-lint-check:
-  stage: lint
-  image: python:3.12-slim
+install-deps:
+  stage: build
+  image: python:3.11
   script:
-    - pip install pyflakes --quiet
-    - python -m pyflakes src/calculator.py
+    - pip install -r requirements.txt
 
-run-tests:
-  stage: test
-  image: python:3.12-slim
+compile:
+  stage: build
+  image: python:3.11
+  needs: [install-deps]
   script:
-    - pip install pytest --quiet
-    - pytest tests/ -v
+    - python -m py_compile src/main.py
+
+unit-tests:
+  stage: test
+  image: python:3.11
+  script:
+    - pip install -r requirements.txt
+    - pytest tests/
