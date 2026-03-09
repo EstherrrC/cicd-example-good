@@ -22,6 +22,7 @@ compile:
 unit-tests:
   stage: test
   image: python:3.11
+  needs: []
   script:
     - pip install -r requirements.txt
     - pytest tests/
