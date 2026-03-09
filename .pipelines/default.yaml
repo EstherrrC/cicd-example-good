@@ -15,7 +15,7 @@ install-deps:
 compile:
   stage: build
   image: python:3.11
-  needs: [install-deps]
+  needs: []
   script:
     - python -m py_compile src/main.py
 
