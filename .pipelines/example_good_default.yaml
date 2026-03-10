@@ -1,5 +1,5 @@
 pipeline:
-  name: default
+  name: example_good_default
   description: Standard build and test pipeline
 
 stages:
