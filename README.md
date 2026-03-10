@@ -25,7 +25,7 @@ cicd verify .pipelines/example_good_default.yaml
 
 Expected output:
 ```
-✓ '.pipelines/default.yaml' is valid
+✓ '.pipelines/example_good_default.yaml' is valid
 ```
 
 Verify all pipeline files in the folder at once:
@@ -53,19 +53,19 @@ build:
   install-deps:
     image: python:3.11
     script:
-      - pip install -r requirements.txt
+    - pip install -r requirements.txt
   compile:
     image: python:3.11
     needs:
-      - install-deps
+    - install-deps
     script:
-      - python -m py_compile src/main.py
+    - python -m py_compile src/main.py
 test:
   unit-tests:
     image: python:3.11
     script:
-      - pip install -r requirements.txt
-      - pytest tests/
+    - pip install -r requirements.txt
+    - pytest tests/
 ```
 
 ---
@@ -78,12 +78,12 @@ cicd run --name example_good_default
 
 Expected output:
 ```
-Submitting pipeline 'default' for execution...
+Submitting pipeline 'example_good_default' for execution...
 ✓ Pipeline queued successfully (run ID: 1)
 Waiting for pipeline to complete...
 
 ✓ Pipeline completed successfully!
-Total time: 38s
+Total time: 10s
 Run ID: 1
 
 Stage Summary:
@@ -105,15 +105,15 @@ cicd report --pipeline example_good_default
 Expected output:
 ```yaml
 pipeline:
-  name: default
+  name: example_good_default
   runs:
   - run-no: 1
     status: success
-    git-repo: https://github.com/EstherrrC/cicd-example-success.git
+    git-repo: https://github.com/EstherrrC/cicd-example-good.git
     git-branch: main
-    git-hash: d97f8f8f7a394d4c60310dbfcd2d1af762604dc0
-    start: '2026-03-09T02:40:39.294923+00:00'
-    end: '2026-03-09T02:40:51.690628+00:00'
+    git-hash: 32d9c458bf8a194af39649417469b5c9407c7e6f
+    start: '2026-03-10T22:27:28.143608+00:00'
+    end: '2026-03-10T22:27:34.194895+00:00'
 ```
 
 Details for a specific run:
@@ -121,77 +121,14 @@ Details for a specific run:
 cicd report --pipeline example_good_default --run 1
 ```
 
-Expected output:
-```yaml
-pipeline:
-  name: default
-  run-no: 1
-  status: success
-  start: '2026-03-09T02:40:39.294923+00:00'
-  end: '2026-03-09T02:40:51.690628+00:00'
-  stages:
-  - name: build
-    status: success
-    start: '2026-03-09T02:40:39.301356+00:00'
-    end: '2026-03-09T02:40:49.382020+00:00'
-  - name: test
-    status: success
-    start: '2026-03-09T02:40:39.303668+00:00'
-    end: '2026-03-09T02:40:51.689057+00:00'
-```
-
 Details for a specific stage:
 ```bash
 cicd report --pipeline example_good_default --run 1 --stage build
 ```
 
-Expected output:
-```yaml
-pipeline:
-  name: default
-  run-no: 1
-  status: success
-  start: '2026-03-09T02:40:39.294923+00:00'
-  end: '2026-03-09T02:40:51.690628+00:00'
-  stage:
-  - name: build
-    status: success
-    start: '2026-03-09T02:40:39.301356+00:00'
-    end: '2026-03-09T02:40:49.382020+00:00'
-    jobs:
-    - name: install-deps
-      status: success
-      start: '2026-03-09T02:40:39.304897+00:00'
-      end: '2026-03-09T02:40:49.376926+00:00'
-    - name: compile
-      status: success
-      start: '2026-03-09T02:40:39.304897+00:00'
-      end: '2026-03-09T02:40:49.376926+00:00'
-```
-
 Details for a specific job:
 ```bash
 cicd report --pipeline example_good_default --run 1 --stage build --job compile
-```
-
-Expected output:
-```yaml
-pipeline:
-  name: default
-  run-no: 1
-  status: success
-  start: '2026-03-09T02:40:39.294923+00:00'
-  end: '2026-03-09T02:40:51.690628+00:00'
-  stage:
-  - name: build
-    status: success
-    start: '2026-03-09T02:40:39.301356+00:00'
-    end: '2026-03-09T02:40:49.382020+00:00'
-    job:
-    - name: compile
-      status: success
-      start: '2026-03-09T02:40:39.304897+00:00'
-      end: '2026-03-09T02:40:49.376926+00:00'
 ```
 
 ---
