@@ -6,16 +6,9 @@ stages:
   - build
   - test
 
-install-deps:
-  stage: build
-  image: python:3.11
-  script:
-    - pip install -r requirements.txt
-
 compile:
   stage: build
   image: python:3.11
-  needs: [install-deps]
   script:
     - python -m py_compile src/main.py
 
@@ -23,5 +16,5 @@ unit-tests:
   stage: test
   image: python:3.11
   script:
-    - pip install -r requirements.txt
+    - pip install pytest
     - pytest tests/
