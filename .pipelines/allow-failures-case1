@@ -1,0 +1,22 @@
+pipeline:
+  name: allow-failures-case1
+  description: |
+    Case 1 - A required, B optional (B needs A)
+    Expected: case1-A fails → case1-B SKIPPED → stage FAILED → pipeline FAILED
+    This demonstrates that a required job failure blocks its optional dependent.
+
+stages:
+  - test
+
+case1-A:
+  stage: test
+  image: alpine:latest
+  script: exit 1          # required job, intentionally fails
+  failures: false
+
+case1-B:
+  stage: test
+  needs: [case1-A]
+  image: alpine:latest
+  script: echo "This should NOT run"
+  failures: true

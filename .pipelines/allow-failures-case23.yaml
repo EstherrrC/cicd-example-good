@@ -1,0 +1,45 @@
+pipeline:
+  name: allow-failures-case23
+  description: |
+    Case 2 - A optional, B required (B needs A)
+    Expected: case2-A fails → case2-B STILL RUNS → stage result depends on B → SUCCESS
+    Case 3 - Both optional (B needs A)  
+    Expected: case3-A fails → case3-B STILL RUNS → neither affects stage → SUCCESS
+
+stages:
+  - case2
+  - case3
+
+# ──────────────────────────────────────────────
+# Case 2: A optional, B required
+#   A fails → B still runs → stage SUCCESS (B succeeds)
+# ──────────────────────────────────────────────
+case2-A:
+  stage: case2
+  image: alpine:latest
+  script: exit 1          # optional job, intentionally fails
+  failures: true
+
+case2-B:
+  stage: case2
+  needs: [case2-A]
+  image: alpine:latest
+  script: echo "Case 2-B runs despite case2-A failing"
+  failures: false
+
+# ──────────────────────────────────────────────
+# Case 3: Both optional
+#   A fails → B still runs → stage SUCCESS (neither affects result)
+# ──────────────────────────────────────────────
+case3-A:
+  stage: case3
+  image: alpine:latest
+  script: exit 1          # optional job, intentionally fails
+  failures: true
+
+case3-B:
+  stage: case3
+  needs: [case3-A]
+  image: alpine:latest
+  script: echo "Case 3-B runs, neither job affects stage result"
+  failures: true
