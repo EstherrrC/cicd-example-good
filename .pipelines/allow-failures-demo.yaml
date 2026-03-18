@@ -1,57 +1,57 @@
-pipeline:       
-  name: allow-failures-demo                                                                           
-  description: allow_failure demo — all 3 dependency cases
+  pipeline:       
+    name: default                                                                           
+    description: allow_failure demo — all 3 dependency cases
 
-stages:
-  - case-1
-  - case-2                                                                                
-  - case-3
-                                                                                          
-# ── Case 1: A required, B optional, B needs A ──────────────────────────────
-# A succeeds → B runs but fails → stage still passes (B is optional)
-# (swap A's script to `exit 1` to show: A fails → B is skipped entirely)                  
-                                                                                          
-job-a-1:                                                                                  
-  stage: case-1                                                                           
-  image: python:3.11-slim
-  script: echo "A done"
+  stages:
+    - case-1
+    - case-2                                                                                
+    - case-3
+                                                                                            
+  # ── Case 1: A required, B optional, B needs A ──────────────────────────────
+  # A succeeds → B runs but fails → stage still passes (B is optional)
+  # (swap A's script to `exit 1` to show: A fails → B is skipped entirely)                  
+                                                                                            
+  job-a-1:                                                                                  
+    stage: case-1                                                                           
+    image: python:3.11-slim
+    script: echo "A done"
 
-job-b-1:
-  stage: case-1
-  image: python:3.11-slim
-  script: exit 1                                                                          
-  needs: [job-a-1]
-  failures: true                                                                          
-                
-# ── Case 2: A optional, B required, B needs A ──────────────────────────────             
-# A fails → B still runs (A is optional, doesn't block B)
-# B succeeds → stage passes  (B is required, its result counts)                           
-                                                                                          
-job-a-2:
-  stage: case-2                                                                           
-  image: python:3.11-slim                                                                 
-  script: exit 1
-  failures: true                                                                          
-                
-job-b-2:
-  stage: case-2
-  image: python:3.11-slim
-  script: echo "B ran even though A failed"
-  needs: [job-a-2]                                                                        
- 
-# ── Case 3: Both optional, B needs A ───────────────────────────────────────             
-# A fails → B still runs (A is optional)
-# B also fails → stage still passes (both are optional)                                   
- 
-job-a-3:                                                                                  
-  stage: case-3 
-  image: python:3.11-slim                                                                 
-  script: exit 1                                                                          
-  failures: true                                                                          
-                                                                                          
-job-b-3:        
-  stage: case-3
-  image: python:3.11-slim
-  script: exit 1
-  needs: [job-a-3]                                                                        
-  failures: true
+  job-b-1:
+    stage: case-1
+    image: python:3.11-slim
+    script: exit 1                                                                          
+    needs: [job-a-1]
+    failures: true                                                                          
+                  
+  # ── Case 2: A optional, B required, B needs A ──────────────────────────────             
+  # A fails → B still runs (A is optional, doesn't block B)
+  # B succeeds → stage passes  (B is required, its result counts)                           
+                                                                                            
+  job-a-2:
+    stage: case-2                                                                           
+    image: python:3.11-slim                                                                 
+    script: exit 1
+    failures: true                                                                          
+                  
+  job-b-2:
+    stage: case-2
+    image: python:3.11-slim
+    script: echo "B ran even though A failed"
+    needs: [job-a-2]                                                                        
+   
+  # ── Case 3: Both optional, B needs A ───────────────────────────────────────             
+  # A fails → B still runs (A is optional)
+  # B also fails → stage still passes (both are optional)                                   
+   
+  job-a-3:                                                                                  
+    stage: case-3 
+    image: python:3.11-slim                                                                 
+    script: exit 1                                                                          
+    failures: true                                                                          
+                                                                                            
+  job-b-3:        
+    stage: case-3
+    image: python:3.11-slim
+    script: exit 1
+    needs: [job-a-3]                                                                        
+    failures: true
