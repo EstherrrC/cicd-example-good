@@ -1,0 +1,10 @@
+pipeline:
+  name: invalid-example
+
+stages:
+  - build
+
+compile:
+  stage: nonexistent
+  image: python:3.11
+  script: echo hello
