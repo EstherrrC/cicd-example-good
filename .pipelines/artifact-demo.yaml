@@ -1,0 +1,30 @@
+pipeline:
+  name: artifact-demo
+  description: Test artifact upload to MinIO
+
+stages:
+  - build
+  - report
+
+# Build stage: create a file and upload it as artifact
+compile:
+  stage: build
+  image: python:3.11-slim
+  script:
+    - mkdir -p build/dist
+    - echo "hello from build" > build/dist/output.txt
+    - echo "build done"
+  artifacts:
+    - build/dist/output.txt
+
+# Report stage: create multiple files, upload with glob pattern
+generate-reports:
+  stage: report
+  image: python:3.11-slim
+  script:
+    - mkdir -p build/reports
+    - echo "<html><body>Test Report</body></html>" > build/reports/test.html
+    - echo "<html><body>Coverage Report</body></html>" > build/reports/coverage.html
+    - echo "reports done"
+  artifacts:
+    - build/reports/*.html
