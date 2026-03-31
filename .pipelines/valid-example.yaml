@@ -1,0 +1,23 @@
+pipeline:
+  name: valid-example
+  description: A valid pipeline configuration for demonstration
+
+stages:
+  - build
+  - test
+  - deploy
+
+compile:
+  stage: build
+  image: gradle:jdk21-corretto
+  script: gradle build
+
+unittest:
+  stage: test
+  image: gradle:jdk21-corretto
+  script: gradle test
+
+package:
+  stage: deploy
+  image: gradle:jdk21-corretto
+  script: gradle assembleDist
