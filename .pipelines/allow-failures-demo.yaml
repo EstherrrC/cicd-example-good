@@ -1,5 +1,5 @@
   pipeline:       
-    name: default                                                                           
+    name: allow-failures-demo                                                                           
     description: allow_failure demo — all 3 dependency cases
 
   stages:
