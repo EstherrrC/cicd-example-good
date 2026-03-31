@@ -9,15 +9,15 @@ stages:
 
 compile:
   stage: build
-  image: gradle:jdk21-corretto
-  script: gradle build
+  image: python:3.11-slim
+  script: echo "build done"
 
 unittest:
   stage: test
-  image: gradle:jdk21-corretto
-  script: gradle test
+  image: python:3.11-slim
+  script: echo "test done"
 
 package:
   stage: deploy
-  image: gradle:jdk21-corretto
-  script: gradle assembleDist
+  image: python:3.11-slim
+  script: echo "deploy done"
