@@ -1,0 +1,79 @@
+pipeline:
+  name: full-demo
+  description: >
+    Demonstrates all implemented features:
+    async run, status, report, artifacts, and allow_failures.
+
+stages:
+  - build
+  - test
+  - deploy
+
+# ── Build stage ─────────────────────────────────────────────
+# Required job: compiles output and uploads artifact
+compile:
+  stage: build
+  image: python:3.11-slim
+  script:
+    - mkdir -p build/dist
+    - echo "compiled output v1.0" > build/dist/app.txt
+    - echo "compile done"
+  artifacts:
+    - build/dist/app.txt
+
+# Optional job: linting — allowed to fail, does not block build stage
+lint:
+  stage: build
+  image: python:3.11-slim
+  script: exit 1                  # always fails — stage still passes (failures: true)
+  failures: true
+
+# ── Test stage ──────────────────────────────────────────────
+# Required job: unit tests — must pass
+unit-tests:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - echo "running unit tests..."
+    - echo "all tests passed"
+
+# Optional job: coverage report — allowed to fail
+coverage:
+  stage: test
+  image: python:3.11-slim
+  script: exit 1                  # fails but does not fail the stage
+  failures: true
+  needs: [unit-tests]
+
+# Required job: generates HTML reports and uploads as artifact
+reports:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - mkdir -p build/reports
+    - echo "<html><body>Test Report</body></html>" > build/reports/test.html
+    - echo "<html><body>Coverage Report</body></html>" > build/reports/coverage.html
+    - echo "reports generated"
+  needs: [unit-tests]
+  artifacts:
+    - build/reports/*.html
+
+# ── Deploy stage ─────────────────────────────────────────────
+# Required job: packages and uploads artifact
+package:
+  stage: deploy
+  image: python:3.11-slim
+  script:
+    - mkdir -p build/dist
+    - echo "packaged artifact v1.0" > build/dist/package.zip
+    - echo "packaging done"
+  artifacts:
+    - build/dist/package.zip
+
+# Optional job: notify — allowed to fail, does not block deploy
+notify:
+  stage: deploy
+  image: python:3.11-slim
+  script: exit 1                  # simulates a flaky notification service
+  failures: true
+  needs: [package]
