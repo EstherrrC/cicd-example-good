@@ -1,0 +1,41 @@
+pipeline:
+  name: ci-demo
+  description: Continuous integration pipeline for demo
+
+stages:
+  - build
+  - test
+
+install:
+  stage: build
+  image: python:3.11-slim
+  script:
+    - pip install -r requirements.txt
+    - pip install pytest pytest-cov flake8
+
+lint:
+  stage: build
+  image: python:3.11-slim
+  needs: [install]
+  script:
+    - pip install flake8
+    - flake8 src/ --max-line-length=100 --statistics
+
+unit-tests:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install pytest
+    - pip install -r requirements.txt
+    - pytest tests/ -v
+
+coverage:
+  stage: test
+  image: python:3.11-slim
+  needs: [unit-tests]
+  script:
+    - pip install pytest pytest-cov
+    - pip install -r requirements.txt
+    - pytest tests/ --cov=src --cov-report=term-missing
+  artifacts:
+    - coverage.xml
