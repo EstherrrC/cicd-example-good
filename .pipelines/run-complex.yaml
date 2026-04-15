@@ -1,0 +1,69 @@
+pipeline:
+  name: run-complex
+  description: Complex pipeline covering multiple features together
+
+stages:
+  - build
+  - test
+  - package
+
+# ── BUILD STAGE ──────────────────────────────────────────
+compile:
+  stage: build
+  image: alpine:latest
+  script:
+    - mkdir -p dist
+    - echo "compiled output" > dist/app.bin
+    - echo "build log" > build.log
+  artifacts:
+    - dist/app.bin
+    - "*.log"
+
+lint:
+  stage: build
+  image: alpine:latest
+  script:
+    - echo "linting..."
+  failures: true   # lint 失敗不影響 build stage
+
+# ── TEST STAGE ───────────────────────────────────────────
+unit-test:
+  stage: test
+  image: alpine:latest
+  script:
+    - echo "running unit tests"
+    - echo "test-report" > unit-report.txt
+  artifacts:
+    - unit-report.txt
+
+flaky-test:
+  stage: test
+  image: alpine:latest
+  script:
+    - exit 1        # 故意失敗
+  failures: true   # 不影響 stage
+
+integration-test:
+  stage: test
+  image: alpine:latest
+  needs: [unit-test]
+  script:
+    - echo "running integration tests"
+
+# ── PACKAGE STAGE ────────────────────────────────────────
+package-app:
+  stage: package
+  image: alpine:latest
+  script:
+    - mkdir -p release
+    - echo "final package" > release/app-v1.0.tar.gz
+  artifacts:
+    - release/
+
+notify:
+  stage: package
+  image: alpine:latest
+  needs: [package-app]
+  script:
+    - echo "notifying team..."
+  failures: true
