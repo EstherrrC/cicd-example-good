@@ -1,5 +1,5 @@
 pipeline:
-  name: allow-failures-case23
+  name: allow-failures-case
   description: |
     Case 2 - A optional, B required (B needs A)
     Expected: case2-A fails → case2-B STILL RUNS → stage result depends on B → SUCCESS
