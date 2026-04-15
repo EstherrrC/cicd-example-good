@@ -1,0 +1,57 @@
+pipeline:
+  name: test-allow-failures
+stages:
+  - test
+  
+# Case 1: A required, B optional (A fails，B is skipped, Stage fails)
+case1-A:
+  stage: test
+  image: alpine:latest
+  script: 
+    - exit 1
+  failures: false
+case1-B:
+  stage: test
+  needs: [case1-A]
+  image: alpine:latest
+  script: 
+    - echo "This should NOT run"
+  failures: true
+
+# Case 2: A optional, B required (A failure does not affect B, B will run normally)
+case2-A:
+  stage: test
+  image: alpine:latest
+  script: 
+    - exit 1
+  failures: true
+case2-B:
+  stage: test
+  needs: [case2-A]
+  image: alpine:latest
+  script: 
+    - echo "This SHOULD run and succeed"
+  failures: false
+
+# Case 3: Both optional (A fails, B still runs, neither affects Stage status)
+case3-A:
+  stage: test
+  image: alpine:latest
+  script: 
+    - exit 1
+  failures: true
+case3-B:
+  stage: test
+  needs: [case3-A]
+  image: alpine:latest
+  script: 
+    - echo "This SHOULD run and succeed"
+  failures: true
+
+# Case 4: No dependencies, independent job (should run regardless of other jobs' statuses)
+independent-job:
+  stage: test
+  image: alpine:latest
+  script: 
+    - echo "Independent job runs"
+  failures: false
