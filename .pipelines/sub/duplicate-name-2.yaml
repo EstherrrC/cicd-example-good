@@ -1,0 +1,10 @@
+pipeline:
+  name: duplicate-example
+
+stages:
+  - build
+
+job2:
+  stage: build
+  image: alpine
+  script: echo "File 2"

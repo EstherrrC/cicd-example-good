@@ -1,0 +1,16 @@
+pipeline:
+  name: verify-needs-undefined
+
+stages:
+  - test
+
+job1:
+  stage: test
+  image: alpine
+  script: echo "Job 1"
+
+job2:
+  stage: test
+  image: alpine
+  script: echo "Job 2"
+  needs: [nonexistent-job]

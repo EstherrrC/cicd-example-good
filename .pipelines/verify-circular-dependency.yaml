@@ -1,0 +1,24 @@
+pipeline:
+  name: verify-circular-dependency
+  description: Demonstrates cycle detection in job dependencies
+
+stages:
+  - test
+
+job1:
+  stage: test
+  image: alpine
+  script: echo "Job 1"
+  needs: [job2]
+
+job2:
+  stage: test
+  image: alpine
+  script: echo "Job 2"
+  needs: [job3]
+
+job3:
+  stage: test
+  image: alpine
+  script: echo "Job 3"
+  needs: [job1]

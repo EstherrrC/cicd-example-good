@@ -1,0 +1,12 @@
+pipeline:
+  name: verify-empty-needs
+  description: Verify that a needs list cannot be empty
+
+stages:
+  - build
+
+job1:
+  stage: build
+  image: alpine
+  script: echo hello
+  needs: []

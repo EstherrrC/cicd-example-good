@@ -1,0 +1,46 @@
+pipeline:
+  name: verify-cross-stage-needs
+  description: A complex pipeline showing parallel jobs in the test stage
+
+stages:
+  - build
+  - test
+  - deploy
+
+# Build Stage
+install:
+  stage: build
+  image: python:3.11
+  script: poetry install
+
+# Test Stage
+lint:
+  stage: test
+  image: python:3.11
+  needs: [install]
+  script: poetry run ruff check .
+
+type-check:
+  stage: test
+  image: python:3.11
+  needs: [install]
+  script: poetry run mypy src/
+
+unit-test:
+  stage: test
+  image: python:3.11
+  needs: [install]
+  script: poetry run pytest
+
+# Deploy Stage
+staging-deploy:
+  stage: deploy
+  image: alpine
+  needs: [unit-test, lint, type-check]
+  script: echo "Deploying to staging"
+
+production-deploy:
+  stage: deploy
+  image: alpine
+  needs: [staging-deploy]
+  script: echo "Deploying to production"

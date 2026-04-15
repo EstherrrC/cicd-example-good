@@ -1,0 +1,43 @@
+pipeline:
+  name: run-async
+  description: Demo pipeline for async client demonstration
+
+stages:
+  - build
+  - test
+  - package
+
+# Build stage — runs first, takes ~20 seconds
+compile:
+  stage: build
+  image: alpine:latest
+  script:
+    - echo "Starting build..."
+    - sleep 20
+    - echo "Build complete."
+
+# Test stage — two independent jobs, each takes ~20 seconds
+unit-tests:
+  stage: test
+  image: alpine:latest
+  script:
+    - echo "Running unit tests..."
+    - sleep 20
+    - echo "Unit tests passed."
+
+integration-tests:
+  stage: test
+  image: alpine:latest
+  script:
+    - echo "Running integration tests..."
+    - sleep 20
+    - echo "Integration tests passed."
+
+# Package stage — runs last, takes ~15 seconds
+package:
+  stage: package
+  image: alpine:latest
+  script:
+    - echo "Packaging application..."
+    - sleep 15
+    - echo "Package ready."

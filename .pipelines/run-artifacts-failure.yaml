@@ -1,0 +1,16 @@
+pipeline:
+  name: run-artifacts-failure
+  description: Test that artifacts are NOT uploaded when a job fails
+
+stages:
+  - build
+
+compile:
+  stage: build
+  image: alpine:latest
+  script:
+    - mkdir -p dist
+    - echo "hello artifact" > dist/app.jar
+    - exit 1
+  artifacts:
+    - dist/*.jar

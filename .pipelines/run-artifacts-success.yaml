@@ -1,0 +1,17 @@
+pipeline:
+  name: run-artifacts-success
+  description: Test pipeline for artifact collection and upload to MinIO
+
+stages:
+  - build
+
+compile:
+  stage: build
+  image: alpine:latest
+  script:
+    - mkdir -p dist
+    - echo "hello artifact" > dist/app.jar
+    - echo "report content" > report.txt
+  artifacts:
+    - dist/*.jar
+    - "*.txt"

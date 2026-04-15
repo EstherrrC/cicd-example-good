@@ -1,0 +1,9 @@
+pipeline:
+  name: verify-no-stages
+
+stages: []
+
+job1:
+  stage: build
+  image: alpine
+  script: echo hello

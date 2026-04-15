@@ -1,0 +1,14 @@
+pipeline:
+  name: verify-empty-stage
+
+stages:
+  - build
+  - test
+  - deploy
+
+compile:
+  stage: build
+  image: python:3.11
+  script: python setup.py build
+
+# Note: 'test' and 'deploy' stages have no jobs assigned!

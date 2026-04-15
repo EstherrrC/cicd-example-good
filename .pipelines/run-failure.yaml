@@ -1,0 +1,11 @@
+# .pipelines/test-failure.yaml
+pipeline:
+  name: run-failure
+
+stages:
+  - test
+
+fail-job:
+  stage: test
+  image: alpine:latest
+  script: exit 1 # This will fail

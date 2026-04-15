@@ -1,0 +1,17 @@
+pipeline:
+  name: verify-duplicate-stage
+
+stages:
+  - build
+  - test
+  - build
+
+job1:
+  stage: build
+  image: python:3.11
+  script: python setup.py build
+
+job2:
+  stage: test
+  image: python:3.11
+  script: pytest

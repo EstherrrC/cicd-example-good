@@ -1,0 +1,17 @@
+pipeline:
+  name: run-success
+  description: Simple test pipeline without dependencies
+
+stages:
+  - test
+
+hello:
+  stage: test
+  image: alpine:latest
+  script: echo "Hello from CI/CD system!"
+
+world:
+  stage: test
+  image: alpine:latest
+  needs: [hello]
+  script: echo "Pipeline is working!"
